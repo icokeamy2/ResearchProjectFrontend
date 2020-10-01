@@ -26,6 +26,7 @@ import Tables from "./views/Tables";
 import BlogPosts from "./views/BlogPosts";
 import HeaderNav from "./views/HeaderNavigation";
 import IconSidebarView from "./views/IconSidebar";
+import DashBoard from "./views/DashBoard";
 
 const BlankIconSidebarLayout = ({ children }) => (
   <IconSidebar noNavbar noFooter>
@@ -45,6 +46,12 @@ export default [
     layout: DefaultLayout,
     component: Analytics
   },
+  {
+    path: "/dash",
+    layout: DefaultLayout,
+    component: DashBoard
+  },
+
   {
     path: "/ecommerce",
     layout: DefaultLayout,

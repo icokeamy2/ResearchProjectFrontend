@@ -1,4 +1,4 @@
-import React from "react";
+import React, {useEffect} from "react";
 import PropTypes from "prop-types";
 import { Container, Row, Col, Button, ButtonGroup } from "shards-react";
 import { NavLink } from "react-router-dom";
@@ -15,6 +15,7 @@ import GoalsOverview from "../components/analytics/GoalsOverview/GoalsOverview";
 import colors from "../utils/colors";
 
 const Analytics = ({ smallStats }) => (
+
   <Container fluid className="main-content-container px-4">
     <Row noGutters className="page-header py-4">
       {/* Page Header :: Title */}
