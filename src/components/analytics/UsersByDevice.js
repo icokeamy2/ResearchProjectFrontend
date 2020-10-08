@@ -155,9 +155,9 @@ UsersByDevice.defaultProps = {
         hoverBorderColor: colors.white.toRGBA(1),
         data: [68.3, 24.2, 7.5],
         icons: [
-          '<i class="material-icons">&#xE30B;</i>',
-          '<i class="material-icons">&#xE32F;</i>',
-          '<i class="material-icons">&#xE325;</i>'
+          // '<i class="material-icons">&#xE30B;</i>',
+          // '<i class="material-icons">&#xE32F;</i>',
+          // '<i class="material-icons">&#xE325;</i>'
         ],
         backgroundColor: [
           colors.primary.toRGBA(0.9),

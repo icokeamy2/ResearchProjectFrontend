@@ -15,7 +15,7 @@ import GoalsOverview from "../components/analytics/GoalsOverview/GoalsOverview";
 
 import colors from "../utils/colors";
 import axios from "axios"
-import {reqLogin} from "../api/api";
+import {reqLogin, reqSessionChart} from "../api/api";
 class DashBoard extends React.Component {
 
   constructor(props) {
@@ -94,20 +94,62 @@ this.state={
     //     }
     //   ]
     // }
-  ]
+  ],
+  chartData: {
+    labels: [
+      "09:00 PM",
+      "10:00 PM",
+      "11:00 PM",
+      "12:00 PM",
+      "13:00 PM",
+      "14:00 PM",
+      "15:00 PM",
+      "16:00 PM",
+      "17:00 PM"
+    ],
+    datasets: [
+      {
+        label: "Today",
+        fill: "start",
+        data: [0,0, 0, 0, 0, 0, 0, 0, 0],
+        backgroundColor: colors.primary.toRGBA(0.1),
+        borderColor: colors.primary.toRGBA(1),
+        pointBackgroundColor: colors.white.toHex(),
+        pointHoverBackgroundColor: colors.primary.toRGBA(1),
+        borderWidth: 1.5
+      },
+      {
+        label: "Yesterday",
+        fill: "start",
+        data: [0, 0, 0, 0, 0, 0, 0, 0, 0],
+        backgroundColor: colors.salmon.toRGBA(0.1),
+        borderColor: colors.salmon.toRGBA(1),
+        pointBackgroundColor: colors.white.toHex(),
+        pointHoverBackgroundColor: colors.salmon.toRGBA(1),
+        borderDash: [5, 5],
+        borderWidth: 1.5,
+        pointRadius: 0,
+        pointBorderColor: colors.salmon.toRGBA(1)
+      }
+    ]
+  },
 
 }
 
   }
   async componentDidMount() {
     let res = await reqLogin();
+    let sessionchart=await reqSessionChart()
     console.log(res.smallStats);
+   console.log(sessionchart.smallStats);
     this.setState({smallStats:res.smallStats.smallStats})
+   this.setState({chartData:sessionchart.smallStats.chartData})
 
   }
 
   render() {
     console.log(this.state.smallStats);
+    console.log(this.state.chartData);
 
     return (
       <Container fluid className="main-content-container px-4">
@@ -153,8 +195,10 @@ this.state={
 
         <Row>
           {/* Sessions */}
-          <Col lg="8" md="12" sm="12" className="mb-4">
-            <Sessions />
+          <Col key={Math.random()} lg="8" md="12" sm="12" className="mb-4">
+            <Sessions
+              chartData={this.state.chartData}
+            />
           </Col>
 
           {/* Users by Device */}

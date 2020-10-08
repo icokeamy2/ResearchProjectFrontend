@@ -80,10 +80,12 @@ class Sessions extends React.Component {
     ]._model.radius = 0;
 
     // Render the chart.
+    console.log(this.props.chartData)
     AnalyticsOverviewChart.render();
   }
 
   render() {
+
     const { title } = this.props;
 
     return (
@@ -144,44 +146,7 @@ Sessions.propTypes = {
 
 Sessions.defaultProps = {
   title: "Sessions",
-  chartData: {
-    labels: [
-      "09:00 PM",
-      "10:00 PM",
-      "11:00 PM",
-      "12:00 PM",
-      "13:00 PM",
-      "14:00 PM",
-      "15:00 PM",
-      "16:00 PM",
-      "17:00 PM"
-    ],
-    datasets: [
-      {
-        label: "Today",
-        fill: "start",
-        data: [5, 5, 10, 30, 10, 42, 5, 15, 5],
-        backgroundColor: colors.primary.toRGBA(0.1),
-        borderColor: colors.primary.toRGBA(1),
-        pointBackgroundColor: colors.white.toHex(),
-        pointHoverBackgroundColor: colors.primary.toRGBA(1),
-        borderWidth: 1.5
-      },
-      {
-        label: "Yesterday",
-        fill: "start",
-        data: ["", 23, 5, 10, 5, 5, 30, 2, 10],
-        backgroundColor: colors.salmon.toRGBA(0.1),
-        borderColor: colors.salmon.toRGBA(1),
-        pointBackgroundColor: colors.white.toHex(),
-        pointHoverBackgroundColor: colors.salmon.toRGBA(1),
-        borderDash: [5, 5],
-        borderWidth: 1.5,
-        pointRadius: 0,
-        pointBorderColor: colors.salmon.toRGBA(1)
-      }
-    ]
-  }
+
 };
 
 export default Sessions;
