@@ -12,130 +12,102 @@ import Sessions from "../components/analytics/Sessions";
 import UsersByDevice from "../components/analytics/UsersByDevice";
 import GoalsOverview from "../components/analytics/GoalsOverview/GoalsOverview";
 
+
 import colors from "../utils/colors";
+import axios from "axios"
+import {reqLogin} from "../api/api";
 class DashBoard extends React.Component {
+
   constructor(props) {
     super(props);
 this.state={
   smallStats: [
-    {
-      label: "Users",
-      value: "2,390",
-      percentage: "12.4%",
-      increase: true,
-      chartLabels: [null, null, null, null, null],
-      decrease: false,
-      datasets: [
-        {
-          label: "Today",
-          fill: "start",
-          borderWidth: 1.5,
-          backgroundColor: colors.primary.toRGBA(0.1),
-          borderColor: colors.primary.toRGBA(),
-          data: [9, 3, 3, 9, 9]
-        }
-      ]
-    },
-    {
-      label: "Sessions",
-      value: "8,391",
-      percentage: "7.21%",
-      increase: false,
-      chartLabels: [null, null, null, null, null],
-      decrease: true,
-      datasets: [
-        {
-          label: "Today",
-          fill: "start",
-          borderWidth: 1.5,
-          backgroundColor: colors.success.toRGBA(0.1),
-          borderColor: colors.success.toRGBA(),
-          data: [3.9, 4, 4, 9, 4]
-        }
-      ]
-    },
-    {
-      label: "Pageviews",
-      value: "21,293",
-      percentage: "3.71%",
-      increase: true,
-      chartLabels: [null, null, null, null, null],
-      decrease: false,
-      datasets: [
-        {
-          label: "Today",
-          fill: "start",
-          borderWidth: 1.5,
-          backgroundColor: colors.warning.toRGBA(0.1),
-          borderColor: colors.warning.toRGBA(),
-          data: [6, 6, 9, 3, 3]
-        }
-      ]
-    },
-    {
-      label: "Pages/Session",
-      value: "6.43",
-      percentage: "2.71%",
-      increase: false,
-      chartLabels: [null, null, null, null, null],
-      decrease: true,
-      datasets: [
-        {
-          label: "Today",
-          fill: "start",
-          borderWidth: 1.5,
-          backgroundColor: colors.salmon.toRGBA(0.1),
-          borderColor: colors.salmon.toRGBA(),
-          data: [0, 9, 3, 3, 3]
-        }
-      ]
-    }
+    // {
+    //   label: "Users",
+    //   value: "2,390",
+    //   percentage: "12.4%",
+    //   increase: true,
+    //   chartLabels: [null, null, null, null, null],
+    //   decrease: false,
+    //   datasets: [
+    //     {
+    //       label: "Today",
+    //       fill: "start",
+    //       borderWidth: 1.5,
+    //       backgroundColor: colors.primary.toRGBA(0.1),
+    //       borderColor: colors.primary.toRGBA(),
+    //       data: [0, 0, 0, 9, 9]
+    //     }
+    //   ]
+    // },
+    // {
+    //   label: "Sessions",
+    //   value: "8,391",
+    //   percentage: "7.21%",
+    //   increase: false,
+    //   chartLabels: [null, null, null, null, null],
+    //   decrease: true,
+    //   datasets: [
+    //     {
+    //       label: "Today",
+    //       fill: "start",
+    //       borderWidth: 1.5,
+    //       backgroundColor: colors.success.toRGBA(0.1),
+    //       borderColor: colors.success.toRGBA(),
+    //       data: [3.9, 4, 4, 9, 4]
+    //     }
+    //   ]
+    // },
+    // {
+    //   label: "Pageviews",
+    //   value: "21,293",
+    //   percentage: "3.71%",
+    //   increase: true,
+    //   chartLabels: [null, null, null, null, null],
+    //   decrease: false,
+    //   datasets: [
+    //     {
+    //       label: "Today",
+    //       fill: "start",
+    //       borderWidth: 1.5,
+    //       backgroundColor: colors.warning.toRGBA(0.1),
+    //       borderColor: colors.warning.toRGBA(),
+    //       data: [6, 6, 9, 3, 3]
+    //     }
+    //   ]
+    // },
+    // {
+    //   label: "Pages/Session",
+    //   value: "6.43",
+    //   percentage: "2.71%",
+    //   increase: false,
+    //   chartLabels: [null, null, null, null, null],
+    //   decrease: true,
+    //   datasets: [
+    //     {
+    //       label: "Today",
+    //       fill: "start",
+    //       borderWidth: 1.5,
+    //       backgroundColor: colors.salmon.toRGBA(0.1),
+    //       borderColor: colors.salmon.toRGBA(),
+    //       data: [0, 9, 3, 3, 3]
+    //     }
+    //   ]
+    // }
   ]
 
 }
 
   }
-  componentDidMount() {
-    let ws = new WebSocket("ws://localhost:8080/websocket");
-    if (typeof (WebSocket) == "undefined") {
-      console.log("遗憾：您的浏览器不支持WebSocket");
-    } else {
-      console.log("恭喜：您的浏览器支持WebSocket");
-      ws.onopen = (evt) => {
-        console.log("Connection open ...");
-        ws.send("管理平台");
-        ws.send("新增人数");
-      };
+  async componentDidMount() {
+    let res = await reqLogin();
+    console.log(res.smallStats);
+    this.setState({smallStats:res.smallStats.smallStats})
 
-      ws.onmessage = (evt) => {
-        console.log("Received Message: " + evt.data);
-        // alert(evt.data)
-        //this.state.messageData 为接受数据的变量
-        let messageData = this.state.messageData;
-        this.setState({
-          messageData: evt.data
-        })
-        // ws.close();
-      };
-      ws.onclose = (evt) => {
-        // alert(evt.data)
-        console.log("Connection closed.");
-        // ws.close();
-      };
-      ws.onerror = (evt) => {
-        console.log("error")
-      };
-      window.onbeforeunload = (event) => {
-        console.log("关闭WebSocket连接！");
-        ws.send("关闭页面");
-        event.close();
-      }
-
-    }
   }
 
   render() {
-
+    console.log(this.state.smallStats);
 
     return (
       <Container fluid className="main-content-container px-4">

@@ -75,6 +75,8 @@ class SmallStats extends React.Component {
       },
       ...this.props.chartConfig
     };
+    console.log(chartConfig)
+    console.log(chartOptions)
 
     new Chart(this.canvasRef.current, chartConfig);
   }
@@ -187,15 +189,15 @@ SmallStats.propTypes = {
   chartLabels: PropTypes.array
 };
 
-SmallStats.defaultProps = {
-  increase: true,
-  percentage: 0,
-  value: 0,
-  label: "Label",
-  chartOptions: Object.create(null),
-  chartConfig: Object.create(null),
-  chartData: [],
-  chartLabels: []
-};
+// SmallStats.defaultProps = {
+//   increase: true,
+//   percentage: 0,
+//   value: 0,
+//   label: "Label",
+//   chartOptions: Object.create(null),
+//   chartConfig: Object.create(null),
+//   chartData: [],
+//   chartLabels: []
+// };
 
 export default SmallStats;
