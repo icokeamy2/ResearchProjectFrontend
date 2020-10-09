@@ -147,6 +147,7 @@ Sessions.propTypes = {
 Sessions.defaultProps = {
   title: "Sessions",
 
+
 };
 
 export default Sessions;

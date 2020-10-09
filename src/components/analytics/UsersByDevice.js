@@ -46,7 +46,7 @@ class UsersByDevice extends React.Component {
     const labels = this.getParsedLabels();
 
     return (
-      <Card small className="ubd-stats h-100">
+      <Card small className="ubd-stats h-80">
         <CardHeader className="border-bottom">
           <h6 className="m-0">{title}</h6>
           <div className="block-handle" />

@@ -1,4 +1,4 @@
-import React from "react";
+import React, {useState} from "react";
 import PropTypes from "prop-types";
 import { Container, Row, Col, Button, ButtonGroup } from "shards-react";
 import { NavLink } from "react-router-dom";
@@ -11,12 +11,22 @@ import CountryReports from "../components/common/CountryReports";
 import Sessions from "../components/analytics/Sessions";
 import UsersByDevice from "../components/analytics/UsersByDevice";
 import GoalsOverview from "../components/analytics/GoalsOverview/GoalsOverview";
-
-
+import GoogleMapReact from 'google-map-react';
+import { GoogleMap, LoadScript,Marker,InfoWindow } from "@react-google-maps/api";
 import colors from "../utils/colors";
 import axios from "axios"
 import {reqLogin, reqSessionChart} from "../api/api";
+import LatestOrders from "../components/ecommerce/LatestOrders";
+const AnyReactComponent = ({ text }) => <div>{text}</div>;
+const mapStyles = {
+  height: "50vh",
+  width: "100%"};
+
+const defaultCenter = {
+  lat: 41.3851, lng: 2.1734
+};
 class DashBoard extends React.Component {
+
 
   constructor(props) {
     super(props);
@@ -133,10 +143,47 @@ this.state={
       }
     ]
   },
+  latestOrdersData: [
+    {
+      id: "#19280",
+      date: "21 February 2018 20:32",
+      status: "Suggestion",
+
+    },
+    {
+      id: "#19279",
+      date: "21 February 2018 20:32",
+      status: "Warning",
+
+    },
+    {
+      id: "#19278",
+      date: "21 February 2018 20:32",
+      status: "Danger",
+    }
+  ],
+  location:
+    {name: "Location 1",
+      location: {
+      lat: 41.3954,
+        lng: 2.162
+    }
+    },
+  selected:{},
+
+
+
+  // center: {
+  //   lat:-34.921230,
+  //   lng: 138.599503
+  // },
+  // zoom: 11,
+
 
 }
 
   }
+
   async componentDidMount() {
     let res = await reqLogin();
     let sessionchart=await reqSessionChart()
@@ -148,8 +195,27 @@ this.state={
   }
 
   render() {
+    // const Marker = ({ show, place }) => {
+    //   const markerStyle = {
+    //     border: '1px solid white',
+    //     borderRadius: '50%',
+    //     height: 10,
+    //     width: 10,
+    //     backgroundColor: show ? 'red' : 'blue',
+    //     cursor: 'pointer',
+    //     zIndex: 10,
+    //   };
+    //   return (
+    //     <>
+    //       <div style={markerStyle} />
+    //       {/*{show && <InfoWindow place={place} />}*/}
+    //     </>
+    //   );
+    // };
+
     console.log(this.state.smallStats);
     console.log(this.state.chartData);
+
 
     return (
       <Container fluid className="main-content-container px-4">
@@ -203,7 +269,10 @@ this.state={
 
           {/* Users by Device */}
           <Col lg="4" md="6" sm="6" className="mb-4">
-            <UsersByDevice />
+            {/*<UsersByDevice />*/}
+            <LatestOrders
+              latestOrdersData={this.state.latestOrdersData}
+            />
           </Col>
 
           {/* Top Referrals */}
@@ -213,12 +282,56 @@ this.state={
 
           {/* Goals Overview */}
           <Col lg="5" className="mb-4">
-            <GoalsOverview />
+            {/*<GoalsOverview />*/}
+            <div style={{ height: '50vh', width: '100%' }}>
+              {/*<GoogleMapReact*/}
+
+              {/*  defaultCenter={this.state.center}*/}
+              {/*  defaultZoom={this.state.zoom}*/}
+              {/*>*/}
+
+              {/*  <AnyReactComponent*/}
+
+
+              {/*    text="My Marker"*/}
+
+              {/*  />*/}
+              {/*  <Marker>*/}
+              {/*    lat={59.955413}*/}
+              {/*    lng={30.337844}*/}
+              {/*  </Marker>*/}
+              {/*</GoogleMapReact>*/}
+              <LoadScript
+                googleMapsApiKey='YOUR_API_KEY_HERE'>
+                <GoogleMap
+                  mapContainerStyle={mapStyles}
+                  zoom={13}
+                  center={defaultCenter}>
+                  <Marker key={"item.name"} position={defaultCenter} onClick={() => this.setState({selected:this.state.location})}/>
+                  {
+                    this.state.selected.location &&
+                    (
+                      <InfoWindow
+                        position={this.state.selected.location}
+                        clickable={true}
+                        onCloseClick={() =>this.setState({selected:{}})}
+                      >
+                        <p>{this.state.selected.name}</p>
+                      </InfoWindow>
+                    )
+                  }
+
+                </GoogleMap>
+              </LoadScript>
+
+
+            </div>
           </Col>
 
           {/* Country Reports */}
           <Col lg="4" className="mb-4">
-            <CountryReports />
+            {/*<CountryReports />*/}
+            <UsersByDevice />
           </Col>
         </Row>
       </Container>
