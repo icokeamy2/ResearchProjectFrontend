@@ -15,7 +15,7 @@ import GoogleMapReact from 'google-map-react';
 import { GoogleMap, LoadScript,Marker,InfoWindow } from "@react-google-maps/api";
 import colors from "../utils/colors";
 import axios from "axios"
-import {reqLogin, reqSessionChart, reqWarning} from "../api/api";
+import {reqLogin, reqRanking, reqSessionChart, reqWarning} from "../api/api";
 import LatestOrders from "../components/ecommerce/LatestOrders";
 const AnyReactComponent = ({ text }) => <div>{text}</div>;
 const mapStyles = {
@@ -241,11 +241,13 @@ this.state={
     let res = await reqLogin();
     let sessionchart=await reqSessionChart()
     let warning=await reqWarning()
+    let ranking=await reqRanking()
     console.log(res.smallStats);
    console.log(sessionchart.smallStats);
     this.setState({smallStats:res.smallStats.smallStats})
    this.setState({chartData:sessionchart.smallStats.chartData})
     this.setState({latestOrdersData:warning.smallStats.latestOrdersData})
+    this.setState({referralData:ranking.smallStats.referralData})
     console.log(warning)
 
   }
