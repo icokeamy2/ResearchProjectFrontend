@@ -129,7 +129,7 @@ LatestOrders.propTypes = {
 };
 
 LatestOrders.defaultProps = {
-  title: "Latest Orders",
+  title: "Notice",
   // latestOrdersData: [
   //   {
   //     id: "#19280",

@@ -1,6 +1,13 @@
 import React, {useState} from "react";
 import PropTypes from "prop-types";
-import { Container, Row, Col, Button, ButtonGroup } from "shards-react";
+import {
+  Container,
+  Row,
+  Col,
+  Button,
+  ButtonGroup,
+  CardHeader, CardBody, Card
+} from "shards-react";
 import { NavLink } from "react-router-dom";
 
 import PageTitle from "../components/common/PageTitle";
@@ -15,7 +22,13 @@ import GoogleMapReact from 'google-map-react';
 import { GoogleMap, LoadScript,Marker,InfoWindow } from "@react-google-maps/api";
 import colors from "../utils/colors";
 import axios from "axios"
-import {reqLogin, reqRanking, reqSessionChart, reqWarning} from "../api/api";
+import {
+  reqLogin, reqMap,
+  reqPercentChart,
+  reqRanking,
+  reqSessionChart,
+  reqWarning
+} from "../api/api";
 import LatestOrders from "../components/ecommerce/LatestOrders";
 const AnyReactComponent = ({ text }) => <div>{text}</div>;
 const mapStyles = {
@@ -164,7 +177,7 @@ this.state={
   ],
   location:
     {name: "Location 1",
-      location: {
+      lo: {
       lat: 41.3954,
         lng: 2.162
     }
@@ -211,9 +224,9 @@ this.state={
         hoverBorderColor: colors.white.toRGBA(1),
         data: [68.3, 24.2, 7.5],
         icons: [
-          // '<i class="material-icons">&#xE30B;</i>',
-          // '<i class="material-icons">&#xE32F;</i>',
-          // '<i class="material-icons">&#xE325;</i>'
+           '<i class="material-icons">&#xE30B;</i>',
+           '<i class="material-icons">&#xE32F;</i>',
+           '<i class="material-icons">&#xE325;</i>'
         ],
         backgroundColor: [
           colors.primary.toRGBA(0.9),
@@ -222,7 +235,10 @@ this.state={
         ]
       }
     ]
-  }
+  },
+    temp:"1",
+    hum:"",
+    soil:"",
 
 
 
@@ -237,20 +253,49 @@ this.state={
 
   }
 
+
+
   async componentDidMount() {
     let res = await reqLogin();
-    let sessionchart=await reqSessionChart()
+    let sessionchart=await reqSessionChart("Temperature","0","0")
     let warning=await reqWarning()
     let ranking=await reqRanking()
+    let percent=await reqPercentChart()
+    let map=await reqMap()
     console.log(res.smallStats);
    console.log(sessionchart.smallStats);
     this.setState({smallStats:res.smallStats.smallStats})
    this.setState({chartData:sessionchart.smallStats.chartData})
     this.setState({latestOrdersData:warning.smallStats.latestOrdersData})
     this.setState({referralData:ranking.smallStats.referralData})
-    console.log(warning)
+    this.setState({roundchartData:percent.smallStats.roundchartData})
+    this.setState({location:map.smallStats.location})
+    console.log(percent)
 
   }
+  handleSizeChange = async e => {
+    if (e === "Temperature") {
+      this.setState({hum: ""});
+      this.setState({soil: ""});
+      this.setState({temp: "1"});
+      const tmp = await reqSessionChart("Temperature","1","0")
+
+
+    } else if (e === "Humidity") {
+      this.setState({temp: ""});
+      this.setState({soil: ""});
+      this.setState({hum: "1"});
+
+    } else if (e === "Soil") {
+      this.setState({temp: ""});
+      this.setState({soil: "1"});
+      this.setState({hum: ""});
+
+    }
+
+    console.log(e)
+
+  };
 
   render() {
     // const Marker = ({ show, place }) => {
@@ -279,30 +324,32 @@ this.state={
       <Container fluid className="main-content-container px-4">
         <Row noGutters className="page-header py-4">
           {/* Page Header :: Title */}
-          <PageTitle title="Analytics" subtitle="Overview" className="text-sm-left mb-3" />
+          <PageTitle title="Dashboard" subtitle="Overview" className="text-sm-left mb-3" />
 
           {/* Page Header :: Actions */}
           <Col xs="12" sm="4" className="col d-flex align-items-center">
-            <ButtonGroup size="sm" className="d-inline-flex mb-3 mb-sm-0 mx-auto">
-              <Button theme="white" tag={NavLink} to="/analytics">
-                Traffic
-              </Button>
-              <Button theme="white" tag={NavLink} to="/ecommerce">
-                Sales
-              </Button>
-            </ButtonGroup>
+            {/*<ButtonGroup size="sm" className="d-inline-flex mb-3 mb-sm-0 mx-auto">*/}
+            {/*  <Button theme="white" tag={NavLink} to="/analytics">*/}
+            {/*    Traffic*/}
+            {/*  </Button>*/}
+            {/*  <Button theme="white" tag={NavLink} to="/ecommerce">*/}
+            {/*    Sales*/}
+            {/*  </Button>*/}
+            {/*</ButtonGroup>*/}
           </Col>
 
           {/* Page Header :: Datepicker */}
           <Col sm="4" className="d-flex">
-            <RangeDatePicker className="justify-content-end" />
+            {/*<RangeDatePicker className="justify-content-end" />*/}
           </Col>
         </Row>
 
         {/* Small Stats Blocks */}
         <Row>
+
           {this.state.smallStats.map((stats, idx) => (
             <Col key={idx} md="6" lg="3" className="mb-4">
+
               <SmallStats
                 id={`small-stats-${idx}`}
                 chartData={stats.datasets}
@@ -320,13 +367,60 @@ this.state={
         <Row>
           {/* Sessions */}
           <Col key={Math.random()} lg="8" md="12" sm="12" className="mb-4">
-            <Sessions
-              chartData={this.state.chartData}
-            />
+            <Card small className="h-100">
+              {/* Card Header */}
+              <CardHeader className="border-bottom">
+                <h6 className="m-0">Trend</h6>
+                <div className="block-handle" />
+              </CardHeader>
+
+              <CardBody className="pt-0">
+                <Row className="border-bottom py-2 bg-light">
+                  {/* Time Interval */}
+                  <Col sm="6" className="col d-flex mb-2 mb-sm-0">
+                    <ButtonGroup >
+                      {this.state.temp && <Button theme="white" active value="Temperature" >
+                        Temperature
+                      </Button>}
+                      {!this.state.temp && <Button theme="white" value="Temperature" onClick={()=>this.handleSizeChange("Temperature")}>
+                        Temperature
+                      </Button>}
+                      {this.state.hum && <Button theme="white" active value="Humidity" >
+                        Humidity
+                      </Button>}
+                      {!this.state.hum && <Button theme="white" value="Humidity" onClick={()=>this.handleSizeChange("Humidity")}>
+                        Humidity
+                      </Button>}
+                      {this.state.soil && <Button theme="white" active value="Soil" >
+                        Soil micronutrients
+                      </Button>}
+                      {!this.state.soil && <Button theme="white" value="Soil" onClick={()=>this.handleSizeChange("Soil")}>
+                        Soil micronutrients
+                      </Button>}
+
+
+                      {/*<Button theme="white">Soil micronutrients</Button>*/}
+                    </ButtonGroup>
+                  </Col>
+
+                  {/* DatePicker */}
+                  <Col sm="6" className="col">
+                    <RangeDatePicker className="justify-content-end" />
+                    <RangeDatePicker className="justify-content-end" />
+                  </Col>
+                </Row>
+
+                <Sessions
+                  chartData={this.state.chartData}
+                />
+              </CardBody>
+            </Card>
+
+
           </Col>
 
           {/* Users by Device */}
-          <Col lg="4" md="6" sm="6" className="mb-4">
+          <Col key={Math.random()} lg="4" md="6" sm="6" className="mb-4">
             {/*<UsersByDevice />*/}
             <LatestOrders
               latestOrdersData={this.state.latestOrdersData}
@@ -334,13 +428,13 @@ this.state={
           </Col>
 
           {/* Top Referrals */}
-          <Col lg="3" sm="6" className="mb-4">
+          <Col key={Math.random()} lg="3" sm="6" className="mb-4">
             <TopReferrals
               referralData={this.state.referralData}/>
           </Col>
 
           {/* Goals Overview */}
-          <Col lg="5" className="mb-4">
+          <Col key={Math.random()} lg="5" className="mb-4">
             {/*<GoalsOverview />*/}
             <div style={{ height: '50vh', width: '100%' }}>
               {/*<GoogleMapReact*/}
@@ -366,7 +460,7 @@ this.state={
                   mapContainerStyle={mapStyles}
                   zoom={13}
                   center={defaultCenter}>
-                  <Marker key={"item.name"} position={defaultCenter} onClick={() => this.setState({selected:this.state.location})}/>
+                  <Marker key={"item.name"} position={this.state.location.lo} onClick={() => this.setState({selected:this.state.location})}/>
                   {
                     this.state.selected.location &&
                     (
@@ -388,7 +482,7 @@ this.state={
           </Col>
 
           {/* Country Reports */}
-          <Col lg="4" className="mb-4">
+          <Col key={Math.random()} lg="4" className="mb-4">
             {/*<CountryReports />*/}
             <UsersByDevice
               chartData={this.state.roundchartData}/>

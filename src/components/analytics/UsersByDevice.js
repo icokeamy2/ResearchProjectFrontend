@@ -111,13 +111,14 @@ class UsersByDevice extends React.Component {
     if (!chartData || typeof chartData.labels === "undefined") {
       return [];
     }
+    console.log(chartData.datasets)
 
     return chartData.labels.map((label, idx) => {
       const dataset = chartData.datasets[0];
 
       return {
         title: label,
-        icon: dataset.icons[idx],
+        // icon: dataset.icons[idx],
         iconColor: dataset.backgroundColor[idx],
         value: dataset.data[idx]
       };

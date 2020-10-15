@@ -14,6 +14,7 @@ import RangeDatePicker from "../common/RangeDatePicker";
 
 import colors from "../../utils/colors";
 import Chart from "../../utils/chart";
+import {reqSessionChart} from "../../api/api";
 
 class Sessions extends React.Component {
   constructor(props) {
@@ -21,7 +22,14 @@ class Sessions extends React.Component {
 
     this.legendRef = React.createRef();
     this.canvasRef = React.createRef();
+    // this.state={
+    //   temp:"1",
+    //   hum:"",
+    //   soil:"",
+    //
+    // }
   }
+
 
   componentDidMount() {
     const chartOptions = {
@@ -83,38 +91,80 @@ class Sessions extends React.Component {
     console.log(this.props.chartData)
     AnalyticsOverviewChart.render();
   }
+  // handleSizeChange = async e => {
+  //   if (e === "Temperature") {
+  //     this.setState({hum: ""});
+  //     this.setState({soil: ""});
+  //     this.setState({temp: "1"});
+  //     const tmp = await reqSessionChart("Temperature","1","0")
+  //
+  //
+  //   } else if (e === "Humidity") {
+  //     this.setState({temp: ""});
+  //     this.setState({soil: ""});
+  //     this.setState({hum: "1"});
+  //
+  //   } else if (e === "Soil") {
+  //     this.setState({temp: ""});
+  //     this.setState({soil: "1"});
+  //     this.setState({hum: ""});
+  //
+  //   }
+  //
+  //   console.log(e)
+  //
+  // };
 
   render() {
+
+
 
     const { title } = this.props;
 
     return (
-      <Card small className="h-100">
+      <Card small >
         {/* Card Header */}
-        <CardHeader className="border-bottom">
-          <h6 className="m-0">{title}</h6>
-          <div className="block-handle" />
-        </CardHeader>
+        {/*<CardHeader className="border-bottom">*/}
+        {/*  <h6 className="m-0">{title}</h6>*/}
+        {/*  <div className="block-handle" />*/}
+        {/*</CardHeader>*/}
 
         <CardBody className="pt-0">
-          <Row className="border-bottom py-2 bg-light">
-            {/* Time Interval */}
-            <Col sm="6" className="col d-flex mb-2 mb-sm-0">
-              <ButtonGroup>
-                <Button theme="white" active>
-                  Hour
-                </Button>
-                <Button theme="white">Day</Button>
-                <Button theme="white">Week</Button>
-                <Button theme="white">Month</Button>
-              </ButtonGroup>
-            </Col>
 
-            {/* DatePicker */}
-            <Col sm="6" className="col">
-              <RangeDatePicker className="justify-content-end" />
-            </Col>
-          </Row>
+          {/*<Row className="border-bottom py-2 bg-light">*/}
+            {/* Time Interval */}
+            {/*<Col sm="3" className="col d-flex mb-2 mb-sm-0">*/}
+            {/*  <ButtonGroup >*/}
+            {/*    {this.state.temp && <Button theme="white" active value="Temperature" >*/}
+            {/*      Temperature*/}
+            {/*    </Button>}*/}
+            {/*    {!this.state.temp && <Button theme="white" value="Temperature" onClick={()=>this.handleSizeChange("Temperature")}>*/}
+            {/*      Temperature*/}
+            {/*    </Button>}*/}
+            {/*    {this.state.hum && <Button theme="white" active value="Humidity" >*/}
+            {/*      Humidity*/}
+            {/*    </Button>}*/}
+            {/*    {!this.state.hum && <Button theme="white" value="Humidity" onClick={()=>this.handleSizeChange("Humidity")}>*/}
+            {/*      Humidity*/}
+            {/*    </Button>}*/}
+            {/*    {this.state.soil && <Button theme="white" active value="Soil" >*/}
+            {/*      Soil micronutrients*/}
+            {/*    </Button>}*/}
+            {/*    {!this.state.soil && <Button theme="white" value="Soil" onClick={()=>this.handleSizeChange("Soil")}>*/}
+            {/*      Soil micronutrients*/}
+            {/*    </Button>}*/}
+
+
+            {/*    /!*<Button theme="white">Soil micronutrients</Button>*!/*/}
+            {/*  </ButtonGroup>*/}
+            {/*</Col>*/}
+
+            {/*/!* DatePicker *!/*/}
+            {/*<Col sm="6" className="col">*/}
+            {/*  <RangeDatePicker className="justify-content-end" />*/}
+            {/*  <RangeDatePicker className="justify-content-end" />*/}
+            {/*</Col>*/}
+          {/*</Row>*/}
 
           <div ref={this.legendRef} />
           <canvas
@@ -145,7 +195,7 @@ Sessions.propTypes = {
 };
 
 Sessions.defaultProps = {
-  title: "Sessions",
+  title: "Trend",
 
 
 };
