@@ -148,25 +148,7 @@ UsersByDevice.defaultProps = {
   title: "Users by Device",
   chartConfig: Object.create(null),
   chartOptions: Object.create(null),
-  chartData: {
-    labels: ["Desktop", "Tablet", "Mobile"],
-    datasets: [
-      {
-        hoverBorderColor: colors.white.toRGBA(1),
-        data: [68.3, 24.2, 7.5],
-        icons: [
-          // '<i class="material-icons">&#xE30B;</i>',
-          // '<i class="material-icons">&#xE32F;</i>',
-          // '<i class="material-icons">&#xE325;</i>'
-        ],
-        backgroundColor: [
-          colors.primary.toRGBA(0.9),
-          colors.primary.toRGBA(0.5),
-          colors.primary.toRGBA(0.3)
-        ]
-      }
-    ]
-  }
+
 };
 
 export default UsersByDevice;

@@ -15,7 +15,7 @@ import GoogleMapReact from 'google-map-react';
 import { GoogleMap, LoadScript,Marker,InfoWindow } from "@react-google-maps/api";
 import colors from "../utils/colors";
 import axios from "axios"
-import {reqLogin, reqSessionChart} from "../api/api";
+import {reqLogin, reqSessionChart, reqWarning} from "../api/api";
 import LatestOrders from "../components/ecommerce/LatestOrders";
 const AnyReactComponent = ({ text }) => <div>{text}</div>;
 const mapStyles = {
@@ -170,6 +170,59 @@ this.state={
     }
     },
   selected:{},
+  referralData: [
+    {
+      title: "GitHub",
+      value: "19,291"
+    },
+    {
+      title: "Stack Overflow",
+      value: "11,201"
+    },
+    {
+      title: "Hacker News",
+      value: "9,291"
+    },
+    {
+      title: "Reddit",
+      value: "8,281"
+    },
+    {
+      title: "The Next Web",
+      value: "7,128"
+    },
+    {
+      title: "Tech Crunch",
+      value: "6,218"
+    },
+    {
+      title: "YouTube",
+      value: "1,218"
+    },
+    {
+      title: "Adobe",
+      value: "1,171"
+    }
+  ],
+  roundchartData: {
+    labels: ["Desktop", "Tablet", "Mobile"],
+    datasets: [
+      {
+        hoverBorderColor: colors.white.toRGBA(1),
+        data: [68.3, 24.2, 7.5],
+        icons: [
+          // '<i class="material-icons">&#xE30B;</i>',
+          // '<i class="material-icons">&#xE32F;</i>',
+          // '<i class="material-icons">&#xE325;</i>'
+        ],
+        backgroundColor: [
+          colors.primary.toRGBA(0.9),
+          colors.primary.toRGBA(0.5),
+          colors.primary.toRGBA(0.3)
+        ]
+      }
+    ]
+  }
 
 
 
@@ -187,10 +240,13 @@ this.state={
   async componentDidMount() {
     let res = await reqLogin();
     let sessionchart=await reqSessionChart()
+    let warning=await reqWarning()
     console.log(res.smallStats);
    console.log(sessionchart.smallStats);
     this.setState({smallStats:res.smallStats.smallStats})
    this.setState({chartData:sessionchart.smallStats.chartData})
+    this.setState({latestOrdersData:warning.smallStats.latestOrdersData})
+    console.log(warning)
 
   }
 
@@ -277,7 +333,8 @@ this.state={
 
           {/* Top Referrals */}
           <Col lg="3" sm="6" className="mb-4">
-            <TopReferrals />
+            <TopReferrals
+              referralData={this.state.referralData}/>
           </Col>
 
           {/* Goals Overview */}
@@ -331,7 +388,8 @@ this.state={
           {/* Country Reports */}
           <Col lg="4" className="mb-4">
             {/*<CountryReports />*/}
-            <UsersByDevice />
+            <UsersByDevice
+              chartData={this.state.roundchartData}/>
           </Col>
         </Row>
       </Container>
