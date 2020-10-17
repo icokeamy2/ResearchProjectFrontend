@@ -41,6 +41,7 @@ const defaultCenter = {
 class DashBoard extends React.Component {
 
 
+
   constructor(props) {
     super(props);
 this.state={
@@ -239,6 +240,9 @@ this.state={
     temp:"1",
     hum:"",
     soil:"",
+  selectedSession:"Temperature",
+  startDate:"",
+  endDate:""
 
 
 
@@ -278,24 +282,56 @@ this.state={
       this.setState({hum: ""});
       this.setState({soil: ""});
       this.setState({temp: "1"});
-      const tmp = await reqSessionChart("Temperature","1","0")
+      this.setState({selectedSession:"Temperature"})
+      const tmp = await reqSessionChart(this.state.selectedSession,this.state.startDate,this.state.endDate)
+      this.setState({chartData:tmp.smallStats.chartData})
+      console.log(tmp)
 
 
     } else if (e === "Humidity") {
       this.setState({temp: ""});
       this.setState({soil: ""});
       this.setState({hum: "1"});
+      this.setState({selectedSession:"Humidity"})
+      const tmp = await reqSessionChart(this.state.selectedSession,this.state.startDate,this.state.endDate)
+      this.setState({chartData:tmp.smallStats.chartData})
+      console.log(tmp)
 
     } else if (e === "Soil") {
       this.setState({temp: ""});
       this.setState({soil: "1"});
       this.setState({hum: ""});
+      this.setState({selectedSession:"Soil"})
+      const tmp = await reqSessionChart(this.state.selectedSession,this.state.startDate,this.state.endDate)
+      this.setState({chartData:tmp.smallStats.chartData})
+      console.log(tmp)
 
     }
 
     console.log(e)
 
+
   };
+
+
+  handleStartDateChange= (value) => {
+    this.setState({
+       startDate: new Date(value)
+    });
+    console.log(value)
+  }
+
+  handleEndDateChange= (value) =>  {
+    this.setState({
+      endDate: new Date(value)
+    });
+  }
+
+  handleSearch= async () => {
+    const tmp = await reqSessionChart(this.state.selectedSession, this.state.startDate, this.state.endDate)
+    this.setState({chartData: tmp.smallStats.chartData})
+  }
+
 
   render() {
     // const Marker = ({ show, place }) => {
@@ -366,7 +402,7 @@ this.state={
 
         <Row>
           {/* Sessions */}
-          <Col key={Math.random()} lg="8" md="12" sm="12" className="mb-4">
+          <Col  lg="8" md="12" sm="12" className="mb-4">
             <Card small className="h-100">
               {/* Card Header */}
               <CardHeader className="border-bottom">
@@ -404,13 +440,22 @@ this.state={
                   </Col>
 
                   {/* DatePicker */}
-                  <Col sm="6" className="col">
-                    <RangeDatePicker className="justify-content-end" />
-                    <RangeDatePicker className="justify-content-end" />
+                  <Col sm="3" className="col">
+
+                    <RangeDatePicker  className="justify-content-end"
+                                      handleStartDateChange={this.handleStartDateChange.bind(this)}
+                                      handleEndDateChange={this.handleEndDateChange.bind(this)}
+                                      startDate={this.state.startDate}
+                                      endDate={this.state.endDate}
+                    />
+                  </Col>
+
+                  <Col sm="3" className="col">
+                    <Button theme="white" value="Search" onClick={()=>this.handleSearch()}>Search</Button>
                   </Col>
                 </Row>
 
-                <Sessions
+                <Sessions key={Math.random()}
                   chartData={this.state.chartData}
                 />
               </CardBody>
@@ -434,7 +479,7 @@ this.state={
           </Col>
 
           {/* Goals Overview */}
-          <Col key={Math.random()} lg="5" className="mb-4">
+          <Col  lg="5" className="mb-4">
             {/*<GoalsOverview />*/}
             <div style={{ height: '50vh', width: '100%' }}>
               {/*<GoogleMapReact*/}
@@ -455,17 +500,17 @@ this.state={
               {/*  </Marker>*/}
               {/*</GoogleMapReact>*/}
               <LoadScript
-                googleMapsApiKey='YOUR_API_KEY_HERE'>
+                googleMapsApiKey="AIzaSyCcjjcc73QSAcy3XOdsxA39peqSKJ2SfcM">
                 <GoogleMap
                   mapContainerStyle={mapStyles}
                   zoom={13}
                   center={defaultCenter}>
                   <Marker key={"item.name"} position={this.state.location.lo} onClick={() => this.setState({selected:this.state.location})}/>
                   {
-                    this.state.selected.location &&
+                    this.state.selected.lo &&
                     (
                       <InfoWindow
-                        position={this.state.selected.location}
+                        position={this.state.selected.lo}
                         clickable={true}
                         onCloseClick={() =>this.setState({selected:{}})}
                       >
