@@ -283,7 +283,7 @@ this.state={
       this.setState({soil: ""});
       this.setState({temp: "1"});
       this.setState({selectedSession:"Temperature"})
-      const tmp = await reqSessionChart(this.state.selectedSession,this.state.startDate,this.state.endDate)
+      const tmp = await reqSessionChart("Temperature",this.state.startDate,this.state.endDate)
       this.setState({chartData:tmp.smallStats.chartData})
       console.log(tmp)
 
@@ -293,7 +293,7 @@ this.state={
       this.setState({soil: ""});
       this.setState({hum: "1"});
       this.setState({selectedSession:"Humidity"})
-      const tmp = await reqSessionChart(this.state.selectedSession,this.state.startDate,this.state.endDate)
+      const tmp = await reqSessionChart("Humidity",this.state.startDate,this.state.endDate)
       this.setState({chartData:tmp.smallStats.chartData})
       console.log(tmp)
 
@@ -302,7 +302,7 @@ this.state={
       this.setState({soil: "1"});
       this.setState({hum: ""});
       this.setState({selectedSession:"Soil"})
-      const tmp = await reqSessionChart(this.state.selectedSession,this.state.startDate,this.state.endDate)
+      const tmp = await reqSessionChart("Temperature",this.state.startDate,this.state.endDate)
       this.setState({chartData:tmp.smallStats.chartData})
       console.log(tmp)
 
