@@ -36,7 +36,7 @@ const mapStyles = {
   width: "100%"};
 
 const defaultCenter = {
-  lat: 41.3851, lng: 2.1734
+  lat: -34.944675, lng: 138.648727
 };
 class DashBoard extends React.Component {
 
@@ -44,7 +44,9 @@ class DashBoard extends React.Component {
 
   constructor(props) {
     super(props);
+
 this.state={
+  date:new Date(),
   smallStats: [
     // {
     //   label: "Users",
@@ -179,8 +181,8 @@ this.state={
   location:
     {name: "Location 1",
       lo: {
-      lat: 41.3954,
-        lng: 2.162
+      lat: -34.944675,
+        lng: 138.648727
     }
     },
   selected:{},
@@ -266,17 +268,41 @@ this.state={
     let ranking=await reqRanking()
     let percent=await reqPercentChart()
     let map=await reqMap()
-    console.log(res.smallStats);
-   console.log(sessionchart.smallStats);
+
     this.setState({smallStats:res.smallStats.smallStats})
    this.setState({chartData:sessionchart.smallStats.chartData})
     this.setState({latestOrdersData:warning.smallStats.latestOrdersData})
     this.setState({referralData:ranking.smallStats.referralData})
     this.setState({roundchartData:percent.smallStats.roundchartData})
     this.setState({location:map.smallStats.location})
-    console.log(percent)
 
+    this.timerID=setInterval(()=>this.tick(),10000);
   }
+  componentWillUnmount(){
+    clearInterval(this.timerID);
+  }
+  async tick() {
+    let res = await reqLogin();
+    let sessionchart = await reqSessionChart("Temperature", "0", "0")
+    let warning = await reqWarning()
+    let ranking = await reqRanking()
+    let percent = await reqPercentChart()
+    let map = await reqMap()
+
+    this.setState({smallStats: res.smallStats.smallStats})
+    if(this.state.temp==="1"){
+      this.setState({chartData: sessionchart.smallStats.chartData})
+    }
+
+    this.setState({latestOrdersData: warning.smallStats.latestOrdersData})
+    this.setState({referralData: ranking.smallStats.referralData})
+    this.setState({roundchartData: percent.smallStats.roundchartData})
+    this.setState({location: map.smallStats.location})
+    this.setState({
+      date: new Date()
+    });
+  }
+
   handleSizeChange = async e => {
     if (e === "Temperature") {
       this.setState({hum: ""});

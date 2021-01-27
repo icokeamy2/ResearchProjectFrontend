@@ -146,7 +146,7 @@ UsersByDevice.propTypes = {
 };
 
 UsersByDevice.defaultProps = {
-  title: "Users by Device",
+  title: "Data by type",
   chartConfig: Object.create(null),
   chartOptions: Object.create(null),
 
