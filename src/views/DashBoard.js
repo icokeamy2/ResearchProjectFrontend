@@ -526,7 +526,7 @@ this.state={
               {/*  </Marker>*/}
               {/*</GoogleMapReact>*/}
               <LoadScript
-                googleMapsApiKey="AIzaSyCcjjcc73QSAcy3XOdsxA39peqSKJ2SfcM">
+                googleMapsApiKey="">
                 <GoogleMap
                   mapContainerStyle={mapStyles}
                   zoom={13}
